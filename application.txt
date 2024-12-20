@@ -1,0 +1,466 @@
+//1
+
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Generate some data for plotting
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
+
+plt.figure()
+plt.plot(x, y)
+plt.title("Line Chart")
+
+categories = ['A', 'B', 'C', 'D']
+values = [20, 35, 30, 25]
+
+plt.figure()
+plt.bar(categories, values)
+plt.title("Bar Chart")
+
+x = np.random.randn(100)
+y = np.random.randn(100)
+colors = np.random.rand(100)
+sizes = 100 * np.random.rand(100)
+
+plt.figure()
+plt.scatter(x, y, c=colors, s=sizes, alpha=0.5)
+plt.title("Scatter Plot")
+
+sizes = [30, 20, 25, 15, 10]
+labels = ['A', 'B', 'C', 'D', 'E']
+
+plt.figure()
+plt.pie(sizes, labels=labels, autopct="%1.1f%%")
+plt.title("Pie Chart")
+
+plt.show()
+
+
+
+
+
+//2
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Reading an Excel File
+file_path = 'data.xlsx'  # Replace with your file path
+df = pd.read_excel(file_path)
+
+# Display the contents of the DataFrame
+print("Contents of the Excel file:")
+print(df)
+
+# Writing Data to an Excel File
+data = {
+    'Name': ['Alice', 'Bob', 'Charlie'],
+    'Age': [24, 30, 22],
+    'City': ['New York', 'Los Angeles', 'Chicago']
+}
+
+df = pd.DataFrame(data)
+
+# Write the DataFrame to an Excel file
+output_file = 'output.xlsx'
+df.to_excel(output_file, index=False)
+
+print(f"Data has been written to {output_file}")
+
+# Appending Data to an Existing Excel File
+file_path = 'output.xlsx'  # Replace with your file path
+existing_df = pd.read_excel(file_path)
+
+new_data = {
+    'Name': ['David', 'Eva'],
+    'Age': [28, 26],
+    'City': ['Houston', 'Phoenix']
+}
+
+new_df = pd.DataFrame(new_data)
+
+# Append new data to the existing DataFrame
+combined_df = pd.concat([existing_df, new_df], ignore_index=True)
+
+# Write the updated DataFrame back to the Excel file
+combined_df.to_excel(file_path, index=False)
+
+print(f"New data has been appended to {file_path}")
+
+# Filtering Data from an Excel File
+file_path = 'data.xlsx'  # Replace with your file path
+df = pd.read_excel(file_path)
+
+# Filter rows where Age is greater than 25
+filtered_df = df[df['Age'] > 25]
+
+# Display the filtered DataFrame
+print("Filtered data (Age > 25):")
+print(filtered_df)
+
+# Creating Charts from Excel Data
+file_path = 'data.xlsx'  # Replace with your file path
+df = pd.read_excel(file_path)
+
+# Create a bar chart
+df.plot(kind='bar', x='Name', y='Age', title='Age of Individuals', legend=False)
+plt.ylabel('Age')
+plt.show()
+
+
+
+
+//3
+
+
+import numpy as np
+
+# Create arrays
+a = np.array([1, 2, 3, 4, 5])
+b = np.array([6, 7, 8, 9, 10])
+
+print("Array a:", a)
+print("Array b:", b)
+
+print("Sum of array a and b:", np.add(a, b))
+print("Difference of array a and b:", np.subtract(a, b))
+print("Product of arrays a and b:", np.multiply(a, b))
+print("Division of arrays a and b:", np.divide(a, b))
+print("Square root of array a:", np.sqrt(a))
+print("Exponential of array a:", np.exp(a))
+print("Minimum value of array a:", np.min(a))
+print("Maximum value of array b:", np.max(b))
+print("Mean of array a:", np.mean(a))
+print("Standard deviation of array b:", np.std(b))
+print("Sum of elements in array a:", np.sum(a))
+
+# Create and reshape a 2D array
+c = np.array([[1, 2], [3, 4], [5, 6]])
+
+print("Array c:")
+print(c)
+
+print("Reshaped array c:")
+print(np.reshape(c, (2, 3)))
+
+# Create and transpose a 2D array
+d = np.array([[1, 2, 3], [4, 5, 6]])
+
+print("Array d:")
+print(d)
+
+print("Transposed array d:")
+print(np.transpose(d))
+
+
+
+//4
+
+
+import numpy as np
+
+# Input and output data
+x = np.array([[2, 9], [1, 9], [3, 6]], dtype=float)
+y = np.array([[92], [86], [89]], dtype=float)
+
+# Normalize the data
+x = x / np.amax(x, axis=0)
+y = y / 100
+
+# Sigmoid function
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+# Derivative of sigmoid function
+def derivation_sigmoid(x):
+    return x * (1 - x)
+
+# Hyperparameters
+epoch = 5000
+lr = 0.1  # Learning rate
+inputlayer_neurons = 2
+hiddenlayer_neurons = 3
+outputlayer_neurons = 1
+
+# Weight and bias initialization
+wb = np.random.uniform(size=(inputlayer_neurons, hiddenlayer_neurons))
+bb = np.random.uniform(size=(1, hiddenlayer_neurons))
+wout = np.random.uniform(size=(hiddenlayer_neurons, outputlayer_neurons))
+bout = np.random.uniform(size=(1, outputlayer_neurons))
+
+# Training the neural network
+for i in range(epoch):
+    # Forward Propagation
+    hinp1 = np.dot(x, wb)
+    hinp = hinp1 + bb
+    hlayer_act = sigmoid(hinp)
+
+    outinp1 = np.dot(hlayer_act, wout)
+    outinp = outinp1 + bout
+    output = sigmoid(outinp)
+
+    # Backpropagation
+    EO = y - output
+    outgrad = derivation_sigmoid(output)
+    d_output = EO * outgrad
+
+    EH = d_output.dot(wout.T)
+    hiddengrad = derivation_sigmoid(hlayer_act)
+    d_hiddenlayer = EH * hiddengrad
+
+    # Update weights and biases
+    wout += hlayer_act.T.dot(d_output) * lr
+    wb += x.T.dot(d_hiddenlayer) * lr
+    bout += np.sum(d_output, axis=0, keepdims=True) * lr
+    bb += np.sum(d_hiddenlayer, axis=0, keepdims=True) * lr
+
+# Print results
+print("Input:\n" + str(x))
+print("Actual:\n" + str(y))
+print("Predicted:\n" + str(output))
+
+
+//5
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+dataset = pd.read_csv('advertising.csv')
+
+# Display the first 10 rows of the dataset
+print(dataset.head(10))
+
+# Dataset information
+print("Dataset Shape:", dataset.shape)
+print("Missing Values:\n", dataset.isna().sum())
+print("Contains Duplicate Rows:", dataset.duplicated().any())
+
+# Boxplots for TV, Newspaper, and Radio
+fig, axs = plt.subplots(3, figsize=(5, 5))
+sns.boxplot(dataset['TV'], ax=axs[0])
+sns.boxplot(dataset['Newspaper'], ax=axs[1])
+sns.boxplot(dataset['Radio'], ax=axs[2])
+plt.tight_layout()
+
+# Distribution and Pairplot
+sns.distplot(dataset['Sales'])
+sns.pairplot(dataset, x_vars=['TV', 'Radio', 'Newspaper'], y_vars='Sales', height=4, aspect=1, kind='scatter')
+plt.show()
+
+# Heatmap
+sns.heatmap(dataset.corr(), annot=True)
+plt.show()
+
+# Importing required libraries for linear regression
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn import metrics
+
+# Define independent and dependent variables
+x = dataset[['TV']]
+y = dataset['Sales']
+
+# Split the dataset into training and testing sets
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=100)
+
+# Create and train the model
+slr = LinearRegression()
+slr.fit(x_train, y_train)
+
+# Display the intercept and coefficient
+print('Intercept:', slr.intercept_)
+print('Coefficient:', slr.coef_[0])
+print("Regression Equation: Sales = {:.3f} + {:.3f} * TV".format(slr.intercept_, slr.coef_[0]))
+
+# Plot the regression line on the training data
+plt.scatter(x_train, y_train)
+plt.plot(x_train, slr.intercept_ + slr.coef_[0] * x_train, 'r')
+plt.show()
+
+# Prediction of test and training set results
+y_pred_slr = slr.predict(x_test)
+x_pred_slr = slr.predict(x_train)
+
+print("Prediction for test set:\n", y_pred_slr)
+
+# Create a DataFrame for actual vs predicted values
+slr_diff = pd.DataFrame({'Actual Value': y_test, 'Predicted Value': y_pred_slr})
+print(slr_diff)
+
+# Predict for any value
+print("Prediction for TV=56:", slr.predict([[56]])[0])
+
+# Print the R-squared value for the model
+print('R-squared value of the model: {:.2f}'.format(slr.score(x, y) * 100))
+
+
+//6
+
+# Importing the necessary libraries
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Importing the dataset
+dataset = pd.read_csv('iris.csv')
+
+# Displaying dataset summary and info
+print(dataset.describe())
+print(dataset.info())
+
+# Splitting the dataset into the Training set and Test set
+X = dataset.iloc[:, [0, 1, 2, 3]].values
+y = dataset.iloc[:, 4].values
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
+
+# Feature Scaling
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+
+# Fitting Logistic Regression to the Training set
+from sklearn.linear_model import LogisticRegression
+classifier = LogisticRegression(random_state=0, solver='lbfgs', multi_class='auto')
+classifier.fit(X_train, y_train)
+
+# Predicting the Test set results
+y_pred = classifier.predict(X_test)
+
+# Predict probabilities
+probs_y = classifier.predict_proba(X_test)
+probs_y = np.round(probs_y, 2)
+
+# Displaying prediction probabilities
+res = "{:<10} | {:<10} | {:<10} | {:<13} | {:<10}\n".format("y_test", "y_pred", "Setosa(%)", "Versicolor(%)", "Virginica(%)")
+res += "-" * 65 + "\n"
+res += "\n".join("{:<10} | {:<10} | {:<10} | {:<13} | {:<10}".format(x, y, a * 100, b * 100, c * 100) for x, y, a, b, c in zip(y_test, y_pred, probs_y[:, 0], probs_y[:, 1], probs_y[:, 2]))
+print(res)
+
+# Making the Confusion Matrix
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test, y_pred)
+print("\nConfusion Matrix:\n", cm)
+
+# Plot confusion matrix
+import seaborn as sns
+
+# Create a DataFrame for the confusion matrix
+df_cm = pd.DataFrame(cm, index=classifier.classes_, columns=classifier.classes_)
+
+# Plot the heatmap
+plt.figure(figsize=(8, 6))
+ax = plt.axes()
+sns.heatmap(df_cm, annot=True, fmt='d', cmap="Blues", ax=ax)
+ax.set_title('Confusion Matrix')
+plt.show()
+
+
+
+//7
+
+import pandas as pd
+
+# Creating the data
+data = {
+    'Name': ['John', 'Emma', 'Sant', 'Lisa', 'Tom'],
+    'Age': [25, 30, 28, 32, 27],
+    'Country': ['USA', 'Canada', 'India', 'UK', 'Australia'],
+    'Salary': [50000, 60000, 70000, 80000, 65000]
+}
+
+# Creating the DataFrame
+df = pd.DataFrame(data)
+
+# Displaying the original DataFrame
+print("Original DataFrame:")
+print(df)
+
+# Selecting 'Name' and 'Age' columns
+name_age = df[['Name', 'Age']]
+print("\nName and Age columns:")
+print(name_age)
+
+# Sorting the DataFrame by 'Salary' in descending order
+sorted_df = df.sort_values("Salary", ascending=False)
+print("\nSorted DataFrame (by Salary in descending order):")
+print(sorted_df)
+
+# Calculating the average salary
+average_salary = df['Salary'].mean()
+print("\nAverage salary:", average_salary)
+
+# Adding a new column 'Experience'
+df['Experience'] = [3, 6, 4, 8, 5]
+print("\nDataFrame with added 'Experience' column:")
+print(df)
+
+# Updating Emma's salary
+df.loc[df['Name'] == 'Emma', 'Salary'] = 65000
+print("\nDataFrame after updating Emma's salary:")
+print(df)
+
+# Deleting the 'Experience' column
+df = df.drop('Experience', axis=1)
+print("\nDataFrame after deleting the 'Experience' column:")
+print(df)
+
+
+
+//8
+
+import csv
+from mrjob.job import MRJob
+
+class MRStudentGrades(MRJob):
+
+    # Mapper function: Process input data and compute average marks
+    def mapper(self, _, line):
+        # Using csv.reader to parse the CSV line
+        reader = csv.reader([line])
+        for data in reader:
+            # Extract student name and marks (assuming marks are integers)
+            name = data[0].strip()
+            marks = list(map(int, data[1:]))  # Convert marks to integers
+
+            # Calculate the average of the marks
+            average = sum(marks) / len(marks)
+
+            # Emit student name as key, and average marks as value
+            yield name, average
+
+    # Reducer function: Assign grades based on average marks
+    def reducer(self, key, values):
+        # There will be only one average value per student
+        average = list(values)[0]
+
+        # Determine the grade based on average marks
+        if average >= 90:
+            grade = 'A+'
+        elif average >= 80:
+            grade = 'A'
+        elif average >= 70:
+            grade = 'B+'
+        elif average >= 60:
+            grade = 'B'
+        elif average >= 50:
+            grade = 'C+'
+        elif average >= 40:
+            grade = 'C'
+        else:
+            grade = 'F'
+
+        # Yield student name and their grade
+        yield key, grade
+
+# Entry point
+if __name__ == '__main__':
+    MRStudentGrades.run()
+
